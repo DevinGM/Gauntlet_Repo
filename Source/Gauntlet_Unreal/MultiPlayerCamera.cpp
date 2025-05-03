@@ -18,8 +18,8 @@ AMultiPlayerCamera::AMultiPlayerCamera()
 	// Create and attach the camera
 	Camera = CreateDefaultSubobject<UCameraComponent>(TEXT("Camera"));
 	Camera->SetupAttachment(RootComponent);
-	Camera->SetRelativeRotation(FRotator(-60.f, 0.f, 0.f));
-	Camera->SetRelativeLocation(FVector(0.f, 0.f, 0.f));
+	Camera->SetRelativeRotation(FRotator(-60.0f, 0.0f, 0.0f));
+	Camera->SetRelativeLocation(FVector(0.0f, 0.0f, 0.0f));
 }
 
 // Called when the game starts or when spawned
@@ -59,7 +59,7 @@ void AMultiPlayerCamera::Tick(float DeltaTime)
 
 	// interpolate camera position to desired position
 	FVector TargetPos = CalculateCenterPosition();
-	FVector DesiredLocation = FVector(TargetPos.X, TargetPos.Y, CameraHeight);
+	FVector DesiredLocation = FVector(TargetPos.X - CameraXOffset, TargetPos.Y, CameraHeight);
 	FVector NewLocation = FMath::VInterpTo(GetActorLocation(), DesiredLocation, DeltaTime, FollowSpeed);
 	SetActorLocation(NewLocation);
 }

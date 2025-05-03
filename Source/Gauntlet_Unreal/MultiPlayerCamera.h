@@ -30,7 +30,9 @@ public:
 	class UCameraComponent* Camera;
 
 	UPROPERTY(EditAnywhere, Category = "Stats")
-	float CameraHeight = 800.f;
+	float CameraHeight = 1200.f;
+	UPROPERTY(EditAnywhere, Category = "Stats")
+	float CameraXOffset = 800.0f;
 	UPROPERTY(EditAnywhere, Category = "Stats")
 	float FollowSpeed = 5.0f;
 

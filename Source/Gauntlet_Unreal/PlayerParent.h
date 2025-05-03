@@ -1,7 +1,7 @@
 // Fill out your copyright notice in the Description page of Project Settings.
 
 /// <summary>
-/// Devin G Monaghan
+/// Devin G Monaghan 
 /// 5/2/2025
 /// Parent character class
 /// </summary>
