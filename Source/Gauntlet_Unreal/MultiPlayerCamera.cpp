@@ -18,7 +18,7 @@ AMultiPlayerCamera::AMultiPlayerCamera()
 	// Create and attach the camera
 	Camera = CreateDefaultSubobject<UCameraComponent>(TEXT("Camera"));
 	Camera->SetupAttachment(RootComponent);
-	Camera->SetRelativeRotation(FRotator(-60.0f, 0.0f, 0.0f));
+	Camera->SetRelativeRotation(FRotator(-90.0f, 0.0f, 0.0f));
 	Camera->SetRelativeLocation(FVector(0.0f, 0.0f, 0.0f));
 }
 
@@ -52,6 +52,46 @@ FVector AMultiPlayerCamera::CalculateCenterPosition() const
 	return Sum / TrackedPlayers.Num();
 }
 
+/*
+* WIP code to clamp players to bounds of the camera
+* 
+// get the bounds of the camera and return as a bounding box
+FBox AMultiPlayerCamera::GetCameraViewBounds() const
+{
+	if (!Camera) return FBox();
+
+	FVector CameraLocation = Camera->GetComponentLocation();
+	FRotator CameraRotation = Camera->GetComponentRotation();
+
+	// Define the screen size in world space
+	float HalfFOV = FMath::DegreesToRadians(Camera->FieldOfView / 2.0f);
+	float AspectRatio = Camera->AspectRatio;
+	float Distance = 1000.f; // How far ahead to check from the camera center
+
+	float Height = 2.0f * Distance * FMath::Tan(HalfFOV);
+	float Width = Height * AspectRatio;
+
+	FVector Forward = Camera->GetForwardVector();
+	FVector Center = CameraLocation + Forward * Distance;
+
+	FVector Extents = FVector(Width / 2.f, Height / 2.f, 500.f); // Add Z buffer
+
+	return FBox(Center - Extents, Center + Extents);
+}
+
+// clamp given player inside given bounding box
+void AMultiPlayerCamera::ClampToCameraView(const FBox& CameraBounds, AActor* player)
+{
+	FVector CurrentLocation = player->GetActorLocation();
+	FVector ClampedLocation = CurrentLocation;
+
+	ClampedLocation.X = FMath::Clamp(CurrentLocation.X, CameraBounds.Min.X, CameraBounds.Max.X);
+	ClampedLocation.Y = FMath::Clamp(CurrentLocation.Y, CameraBounds.Min.Y, CameraBounds.Max.Y);
+	ClampedLocation.Z = FMath::Clamp(CurrentLocation.Z, CameraBounds.Min.Z, CameraBounds.Max.Z);
+
+	player->SetActorLocation(ClampedLocation);
+}*/
+
 // Called every frame
 void AMultiPlayerCamera::Tick(float DeltaTime)
 {
@@ -62,4 +102,11 @@ void AMultiPlayerCamera::Tick(float DeltaTime)
 	FVector DesiredLocation = FVector(TargetPos.X - CameraXOffset, TargetPos.Y, CameraHeight);
 	FVector NewLocation = FMath::VInterpTo(GetActorLocation(), DesiredLocation, DeltaTime, FollowSpeed);
 	SetActorLocation(NewLocation);
+	
+	/*
+	// clamp each player to the bounds of the camera
+	for (AActor* player : TrackedPlayers)
+	{
+		ClampToCameraView(GetCameraViewBounds(), player);
+	}*/
 }
