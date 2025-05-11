@@ -6,7 +6,7 @@
 APlayerParent::APlayerParent()
 {
 	// Set this character to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
-	PrimaryActorTick.bCanEverTick = true;
+	//PrimaryActorTick.bCanEverTick = true;
 }
  
 // Called when the game starts or when spawned
@@ -15,68 +15,62 @@ void APlayerParent::BeginPlay()
 	Super::BeginPlay();
 }
 
-// Called every frame
+/*// Called every frame
 void APlayerParent::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
-
-	// Combine into a movement vector (in X/Y plane)
-	FVector2D MoveDir2D(LastMovementInput.X, LastMovementInput.Y);
-
-	if (!MoveDir2D.IsNearlyZero())
-	{
-		// Convert 2D vector to 3D facing direction
-		FVector MoveDir3D = FVector(MoveDir2D.X, MoveDir2D.Y, 0.0f);
-		FRotator TargetRotation = MoveDir3D.Rotation();
-
-		// Smooth or snap
-		FRotator SmoothRotation = FMath::RInterpTo(GetActorRotation(), TargetRotation, DeltaTime, 10.0f);
-		SetActorRotation(SmoothRotation);
-	}
-}
+}*/
 
 // Default attack behavior — override in child classes if needed
 void APlayerParent::Attack()
 {
 	UE_LOG(LogTemp, Warning, TEXT("Base character attack!"));
-}
 
-// Move player up or down
-void APlayerParent::MoveUpDown(float Value)
-{
-	if (Value != 0.0f)
-	{
-		const FVector Direction = FVector::ForwardVector;
-		// divide moveSpeed by 600 because AddMovementInput defaults to 600
-		// at a moveSpeed of 600, player moves at AddMovementInput's default speed
-		AddMovementInput(Direction, Value * moveSpeed / 600.0f);
+	if (!BulletClass) return;
 
-		// Update last movement input
-		LastMovementInput.X = Value;
-	}
-	else
+	FVector SpawnLocation = GetActorLocation() + GetActorForwardVector() * 100.0f;
+	FRotator SpawnRotation = GetActorRotation();
+
+	FActorSpawnParameters SpawnParams;
+	SpawnParams.Owner = this;
+
+	ABulletParent* Bullet = GetWorld()->SpawnActor<ABulletParent>(BulletClass, SpawnLocation, SpawnRotation, SpawnParams);
+	if (Bullet)
 	{
-		LastMovementInput.X = 0.0f;
+		Bullet->Direction = GetActorForwardVector();
+		Bullet->Direction = Bullet->Direction.GetSafeNormal();
+		Bullet->Damage = damage;
 	}
 }
 
-// Move player left or right
-void APlayerParent::MoveLeftRight(float Value)
+// Move player in given direction
+void  APlayerParent::MoveInDirection(FVector Direction, float DeltaTime)
 {
-	if (Value != 0.0f)
-	{
-		const FVector Direction = FVector::RightVector;
-		// divide moveSpeed by 600 because AddMovementInput defaults to 600
-		// at a moveSpeed of 600, player moves at AddMovementInput's default speed
-		AddMovementInput(Direction, Value * moveSpeed / 600.0f);
+	if (Direction.IsNearlyZero()) return;
 
-		// Update last movement input
-		LastMovementInput.Y = Value;
-	}
-	else
+	// normalize direction for rotation
+	FVector NormalizedDirection = Direction.GetSafeNormal();
+	FRotator TargetRotation = NormalizedDirection.Rotation();
+
+	// keep only yaw rotation (avoid pitch/roll tilting)
+	TargetRotation = FRotator(0.0f, TargetRotation.Yaw, 0.0f);
+
+	// interpolate from current to target rotation
+	FRotator NewRotation = FMath::RInterpTo(GetActorRotation(), TargetRotation, DeltaTime, 10.0f); // 10 = rotation speed
+	SetActorRotation(NewRotation);
+
+	// calculate movement
+	FVector TargetLocation = GetActorLocation() + Direction * moveSpeed * DeltaTime;
+
+	// clamp to camera bounds
+	AMultiPlayerCamera* Camera = AMultiPlayerCamera::GetActiveCamera(GetWorld());
+	if (Camera)
 	{
-		LastMovementInput.Y = 0.0f;
+		TargetLocation = Camera->ClampWorldPositionToView(TargetLocation, 50.0f); // 50 = padding
 	}
+
+	// set location
+	SetActorLocation(TargetLocation);
 }
 
 // call to damage the player by given amount
@@ -86,6 +80,7 @@ void APlayerParent::Damage(int Amount)
 	/////////////////////////////////////////////////////      PUT DEATH CODE HERE
 	if (currentHealth < 0)
 	{
+
 	}
 }
 
@@ -116,6 +111,6 @@ void APlayerParent::OnItemPickUp(EItemType Item)
 	if (Item == EItemType::ScorePickup)
 	{
 		////////////////////////////////////////////	DETERMINE ITEM SCORE AMOUNT HERE
-		Heal(20);
+		AddScore(20);
 	}
 }

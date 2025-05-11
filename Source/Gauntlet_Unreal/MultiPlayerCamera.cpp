@@ -3,6 +3,7 @@
 #include "Camera/CameraComponent.h"
 #include "Kismet/GameplayStatics.h"
 #include "PlayerParent.h"
+#include "EngineUtils.h"
 #include "MultiPlayerCamera.h"
 
 // Sets default values
@@ -27,7 +28,7 @@ void AMultiPlayerCamera::BeginPlay()
 {
 	Super::BeginPlay();
 	
-	// Optionally find all player characters automatically
+	// find all player characters
 	UGameplayStatics::GetAllActorsOfClass(GetWorld(), APlayerParent::StaticClass(), TrackedPlayers);
 
 	// Set this camera as the view target
@@ -52,46 +53,6 @@ FVector AMultiPlayerCamera::CalculateCenterPosition() const
 	return Sum / TrackedPlayers.Num();
 }
 
-/*
-* WIP code to clamp players to bounds of the camera
-* 
-// get the bounds of the camera and return as a bounding box
-FBox AMultiPlayerCamera::GetCameraViewBounds() const
-{
-	if (!Camera) return FBox();
-
-	FVector CameraLocation = Camera->GetComponentLocation();
-	FRotator CameraRotation = Camera->GetComponentRotation();
-
-	// Define the screen size in world space
-	float HalfFOV = FMath::DegreesToRadians(Camera->FieldOfView / 2.0f);
-	float AspectRatio = Camera->AspectRatio;
-	float Distance = 1000.f; // How far ahead to check from the camera center
-
-	float Height = 2.0f * Distance * FMath::Tan(HalfFOV);
-	float Width = Height * AspectRatio;
-
-	FVector Forward = Camera->GetForwardVector();
-	FVector Center = CameraLocation + Forward * Distance;
-
-	FVector Extents = FVector(Width / 2.f, Height / 2.f, 500.f); // Add Z buffer
-
-	return FBox(Center - Extents, Center + Extents);
-}
-
-// clamp given player inside given bounding box
-void AMultiPlayerCamera::ClampToCameraView(const FBox& CameraBounds, AActor* player)
-{
-	FVector CurrentLocation = player->GetActorLocation();
-	FVector ClampedLocation = CurrentLocation;
-
-	ClampedLocation.X = FMath::Clamp(CurrentLocation.X, CameraBounds.Min.X, CameraBounds.Max.X);
-	ClampedLocation.Y = FMath::Clamp(CurrentLocation.Y, CameraBounds.Min.Y, CameraBounds.Max.Y);
-	ClampedLocation.Z = FMath::Clamp(CurrentLocation.Z, CameraBounds.Min.Z, CameraBounds.Max.Z);
-
-	player->SetActorLocation(ClampedLocation);
-}*/
-
 // Called every frame
 void AMultiPlayerCamera::Tick(float DeltaTime)
 {
@@ -102,11 +63,60 @@ void AMultiPlayerCamera::Tick(float DeltaTime)
 	FVector DesiredLocation = FVector(TargetPos.X - CameraXOffset, TargetPos.Y, CameraHeight);
 	FVector NewLocation = FMath::VInterpTo(GetActorLocation(), DesiredLocation, DeltaTime, FollowSpeed);
 	SetActorLocation(NewLocation);
-	
-	/*
-	// clamp each player to the bounds of the camera
-	for (AActor* player : TrackedPlayers)
+}
+
+// static function to allow player to access camera component
+AMultiPlayerCamera* AMultiPlayerCamera::GetActiveCamera(UWorld* World)
+{
+	for (TActorIterator<AMultiPlayerCamera> It(World); It; ++It)
 	{
-		ClampToCameraView(GetCameraViewBounds(), player);
-	}*/
+		// Return the first (and supposedly only) one
+		return *It; 
+	}
+	return nullptr;
+}
+
+// clamp player inside of viewport bounds
+// only check when player is close to edge
+FVector AMultiPlayerCamera::ClampWorldPositionToView(const FVector& WorldPosition, float Padding)
+{
+	if (!GEngine || !GEngine->GameViewport) return WorldPosition;
+
+	APlayerController* PC = UGameplayStatics::GetPlayerController(GetWorld(), 0);
+	if (!PC) return WorldPosition;
+
+	// Project world location to screen
+	FVector2D ScreenPos;
+	PC->ProjectWorldLocationToScreen(WorldPosition, ScreenPos);
+
+	FVector2D ViewportSize;
+	GEngine->GameViewport->GetViewportSize(ViewportSize);
+
+	// Check if on screen within padding
+	bool bOutOfBounds = false;
+	if (ScreenPos.X < Padding || ScreenPos.X > ViewportSize.X - Padding ||
+		ScreenPos.Y < Padding || ScreenPos.Y > ViewportSize.Y - Padding)
+	{
+		bOutOfBounds = true;
+	}
+
+	if (!bOutOfBounds)
+	{
+		// Already within view bounds — don't modify position
+		return WorldPosition;
+	}
+
+	// Clamp screen position
+	ScreenPos.X = FMath::Clamp(ScreenPos.X, Padding, ViewportSize.X - Padding);
+	ScreenPos.Y = FMath::Clamp(ScreenPos.Y, Padding, ViewportSize.Y - Padding);
+
+	// Convert back to world space
+	FVector WorldLocation, WorldDirection;
+	if (PC->DeprojectScreenPositionToWorld(ScreenPos.X, ScreenPos.Y, WorldLocation, WorldDirection))
+	{
+		float Distance = (WorldPosition.Z - WorldLocation.Z) / WorldDirection.Z;
+		return WorldLocation + WorldDirection * Distance;
+	}
+
+	return WorldPosition;
 }
