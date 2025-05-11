@@ -14,12 +14,9 @@ AItemParent::AItemParent()
 
 	CollisionSphere = CreateDefaultSubobject<USphereComponent>(TEXT("CollisionSphere"));
 	RootComponent = CollisionSphere;
-	CollisionSphere->SetSphereRadius(50.f);
+	CollisionSphere->SetSphereRadius(25.0f);
 	CollisionSphere->SetCollisionEnabled(ECollisionEnabled::QueryOnly);
 	CollisionSphere->SetCollisionResponseToAllChannels(ECR_Overlap);
-
-	Mesh = CreateDefaultSubobject<UStaticMeshComponent>(TEXT("Mesh"));
-	Mesh->SetupAttachment(RootComponent);
 }
 
 // Called when the game starts or when spawned

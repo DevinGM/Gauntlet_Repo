@@ -25,6 +25,22 @@ void APlayerParent::Tick(float DeltaTime)
 void APlayerParent::Attack()
 {
 	UE_LOG(LogTemp, Warning, TEXT("Base character attack!"));
+
+	if (!BulletClass) return;
+
+	FVector SpawnLocation = GetActorLocation() + GetActorForwardVector() * 100.0f;
+	FRotator SpawnRotation = GetActorRotation();
+
+	FActorSpawnParameters SpawnParams;
+	SpawnParams.Owner = this;
+
+	ABulletParent* Bullet = GetWorld()->SpawnActor<ABulletParent>(BulletClass, SpawnLocation, SpawnRotation, SpawnParams);
+	if (Bullet)
+	{
+		Bullet->Direction = GetActorForwardVector();
+		Bullet->Direction = Bullet->Direction.GetSafeNormal();
+		Bullet->Damage = damage;
+	}
 }
 
 // Move player in given direction
@@ -95,6 +111,6 @@ void APlayerParent::OnItemPickUp(EItemType Item)
 	if (Item == EItemType::ScorePickup)
 	{
 		////////////////////////////////////////////	DETERMINE ITEM SCORE AMOUNT HERE
-		Heal(20);
+		AddScore(20);
 	}
 }

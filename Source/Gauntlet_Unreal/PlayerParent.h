@@ -8,6 +8,7 @@
 
 #pragma once
 
+#include "BulletParent.h"
 #include "ItemTypes.h"
 #include "CoreMinimal.h"
 #include "GameFramework/Character.h"
@@ -47,7 +48,7 @@ public:
 	FVector LastMovementInput = FVector::ZeroVector;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Combat")
-	TSubclassOf<class AActor> Projectile;
+	TSubclassOf<class ABulletParent> BulletClass;
 
 	UFUNCTION(BlueprintCallable)
 	void Attack();
