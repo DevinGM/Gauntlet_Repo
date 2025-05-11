@@ -11,6 +11,7 @@
 #include "ItemTypes.h"
 #include "CoreMinimal.h"
 #include "GameFramework/Character.h"
+#include "MultiPlayerCamera.h"
 #include "PlayerParent.generated.h"
 
 UCLASS(BluePrintable)
@@ -28,7 +29,7 @@ protected:
 
 public:
 	// Called every frame
-	virtual void Tick(float DeltaTime) override;
+	//virtual void Tick(float DeltaTime) override;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Stats")
 	int maxHealth = 100;
@@ -51,9 +52,7 @@ public:
 	UFUNCTION(BlueprintCallable)
 	void Attack();
 	UFUNCTION(BlueprintCallable)
-	void MoveUpDown(float Value);
-	UFUNCTION(BlueprintCallable)
-	void MoveLeftRight(float Value);
+	void MoveInDirection(FVector Direction, float DeltaTime);
 	UFUNCTION(BlueprintCallable)
 	void Damage(int Amount);
 	UFUNCTION(BlueprintCallable)

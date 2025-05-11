@@ -38,9 +38,8 @@ public:
 
 	UFUNCTION()
 	FVector CalculateCenterPosition() const;
-	/*
 	UFUNCTION()
-	FBox GetCameraViewBounds() const;
+	static AMultiPlayerCamera* GetActiveCamera(UWorld* World);
 	UFUNCTION()
-	void ClampToCameraView(const FBox& CameraBounds, AActor* player);*/
+	FVector ClampWorldPositionToView(const FVector& WorldPosition, float Padding);
 };

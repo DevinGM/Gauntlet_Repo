@@ -48,11 +48,17 @@ void APlayerInputManager::SetupInputs(UInputComponent* InputComp)
 /// </summary>
 void APlayerInputManager::MoveUpDownP1(float Value)
 {
-	if (Player1) Player1->MoveUpDown(Value);
+	if (!Player1 || Value == 0.0f) return;
+
+	float DeltaTime = GetWorld()->GetDeltaSeconds();
+	Player1->MoveInDirection(FVector(FVector::ForwardVector * Value), DeltaTime);
 }
 void APlayerInputManager::MoveLeftRightP1(float Value)
 {
-	if (Player1) Player1->MoveLeftRight(Value);
+	if (!Player1 || Value == 0.0f) return;
+
+	float DeltaTime = GetWorld()->GetDeltaSeconds();
+	Player1->MoveInDirection(FVector(FVector::RightVector * Value), DeltaTime);
 }
 void APlayerInputManager::AttackP1()
 {
@@ -64,11 +70,17 @@ void APlayerInputManager::AttackP1()
 /// </summary>
 void APlayerInputManager::MoveUpDownP2(float Value)
 {
-	if (Player2) Player2->MoveUpDown(Value);
+	if (!Player2 || Value == 0.0f) return;
+
+	const float DeltaTime = GetWorld()->GetDeltaSeconds();
+	Player2->MoveInDirection(FVector(FVector::ForwardVector * Value), DeltaTime);
 }
 void APlayerInputManager::MoveLeftRightP2(float Value)
 {
-	if (Player2) Player2->MoveLeftRight(Value);
+	if (!Player2 || Value == 0.0f) return;
+
+	const float DeltaTime = GetWorld()->GetDeltaSeconds();
+	Player2->MoveInDirection(FVector(FVector::RightVector * Value), DeltaTime);
 }
 void APlayerInputManager::AttackP2()
 {
