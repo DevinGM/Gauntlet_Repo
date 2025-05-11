@@ -21,7 +21,7 @@ void APlayerParent::Tick(float DeltaTime)
 	Super::Tick(DeltaTime);
 }*/
 
-// Default attack behavior — override in child classes if needed
+// spawn a bullet in direction player is facing
 void APlayerParent::Attack()
 {
 	UE_LOG(LogTemp, Warning, TEXT("Base character attack!"));
@@ -40,10 +40,11 @@ void APlayerParent::Attack()
 		Bullet->Direction = GetActorForwardVector();
 		Bullet->Direction = Bullet->Direction.GetSafeNormal();
 		Bullet->Damage = damage;
+		Bullet->Player = this;
 	}
 }
 
-// Move player in given direction
+// move player in given direction
 void  APlayerParent::MoveInDirection(FVector Direction, float DeltaTime)
 {
 	if (Direction.IsNearlyZero()) return;
@@ -77,10 +78,9 @@ void  APlayerParent::MoveInDirection(FVector Direction, float DeltaTime)
 void APlayerParent::Damage(int Amount)
 {
 	currentHealth -= (Amount - armor);
-	/////////////////////////////////////////////////////      PUT DEATH CODE HERE
 	if (currentHealth < 0)
 	{
-
+		////////////////      PUT DEATH CODE HERE
 	}
 }
 
@@ -102,15 +102,23 @@ void APlayerParent::AddScore(int Amount)
 // called when player picks up item
 void APlayerParent::OnItemPickUp(EItemType Item)
 {
+	// if item is health pickup heal
 	if (Item == EItemType::HealthPickup)
 	{
-		////////////////////////////////////////////	DETERMINE ITEM HEAL AMOUNT HERE
+		////////////////	DETERMINE ITEM HEAL AMOUNT HERE
 		Heal(20);
 	}
 
+	// if item is score pickup add to score
 	if (Item == EItemType::ScorePickup)
 	{
-		////////////////////////////////////////////	DETERMINE ITEM SCORE AMOUNT HERE
+		////////////////	DETERMINE ITEM SCORE AMOUNT HERE
 		AddScore(20);
+	}
+
+	// if item is key pickup increment KeysHeld
+	if (Item == EItemType::KeyPickup)
+	{
+		KeysHeld++;
 	}
 }

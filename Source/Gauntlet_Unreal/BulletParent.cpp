@@ -10,14 +10,14 @@ ABulletParent::ABulletParent()
  	// Set this actor to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
 	PrimaryActorTick.bCanEverTick = true;
 
+	// create collision sphere
 	CollisionSphere = CreateDefaultSubobject<USphereComponent>(TEXT("CollisionSphere"));
 	RootComponent = CollisionSphere;
-	CollisionSphere->SetSphereRadius(25.0f);
+	CollisionSphere->SetSphereRadius(25.0f); // 25.0f is .5 in default sphere scale units
 	CollisionSphere->SetCollisionEnabled(ECollisionEnabled::QueryOnly);
 	CollisionSphere->SetCollisionResponseToAllChannels(ECR_Overlap);
 
-	// Auto-destroy after lifespan
-	InitialLifeSpan = LifeSpan;
+	SetLifeSpan(LifeSpan);
 }
 
 // Called when the game starts or when spawned
@@ -41,9 +41,20 @@ void ABulletParent::NotifyActorBeginOverlap(AActor* OtherActor)
 {
 	if (OtherActor->IsA(Enemy))
 	{
-		//Enemy->health -= Damage;
-
-		// Destroy bullet
-		Destroy();
+		//Enemy->Damage();
+		//Enemy->health -= Damage;     /////////////////////////// PUT ENEMY DAMAGE CODE HERE
+		/*
+			if adding player score in bullet:
+				- need to check if enemy is dead after damaging it
+				- if so, add enemy's score to bullet's player
+		
+			if adding player score in enemy:
+				- check for collision in enemy
+				- take damage in enemy
+				- upon death, add score to bullet's player		
+		*/
 	}
+
+	// Destroy bullet
+	Destroy();
 }

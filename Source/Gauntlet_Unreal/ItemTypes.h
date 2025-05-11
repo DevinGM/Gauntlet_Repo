@@ -12,6 +12,7 @@
 UENUM(BlueprintType)
 enum class EItemType : uint8
 {
-    HealthPickup      UMETA(DisplayName = "HealthPickup"),
-    ScorePickup        UMETA(DisplayName = "ScorePickup"),
+    HealthPickup      UMETA(DisplayName = "Health Pickup"),
+    ScorePickup        UMETA(DisplayName = "Score Pickup"),
+    KeyPickup        UMETA(DisplayName = "Key Pickup"),
 };

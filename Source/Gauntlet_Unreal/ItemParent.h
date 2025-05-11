@@ -20,16 +20,15 @@ protected:
 	// Called when the game starts or when spawned
 	virtual void BeginPlay() override;
 
-public:	
+public:
+	// collision sphere
 	UPROPERTY(VisibleAnywhere)
 	class USphereComponent* CollisionSphere;
-
-	UPROPERTY(VisibleAnywhere)
-	class UStaticMeshComponent* Mesh;
-
+	// item type, determined in blueprint
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 	EItemType ItemType;
-
+	
+	// called when collision sphere detects overlap
 	UFUNCTION()
 	virtual void NotifyActorBeginOverlap(AActor* OtherActor) override;
 };
