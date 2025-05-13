@@ -32,47 +32,34 @@ public:
 	// Called every frame
 	//virtual void Tick(float DeltaTime) override;
 
-	// max health
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Stats")
 	int maxHealth = 100;
-	// current health
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Stats")
 	int currentHealth = maxHealth;
-	// amount of damage player can block in a hit
 	UPROPERTY(EditAnywhere, Category = "Stats")
 	int armor = 0;
-	// current score
 	UPROPERTY(EditAnywhere, Category = "Stats")
 	int score = 0;
-	// amount of damage player deals
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Stats")
 	int damage = 10;
-	// movement speed
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Stats")
-	float moveSpeed = 500.0f;
-	// how many keys this player is holding
-	UPROPERTY(EditAnywhere)
-	int KeysHeld = 0;
-	// reference to character's bullet
+	float moveSpeed = 600.0f;
+
+	FVector LastMovementInput = FVector::ZeroVector;
+
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Combat")
 	TSubclassOf<class ABulletParent> BulletClass;
 
-	// spawn a bullet in direction player is facing
 	UFUNCTION(BlueprintCallable)
 	void Attack();
-	// move in given direction
 	UFUNCTION(BlueprintCallable)
 	void MoveInDirection(FVector Direction, float DeltaTime);
-	// take given amount of damage
 	UFUNCTION(BlueprintCallable)
 	void Damage(int Amount);
-	// heal given amount of damage
 	UFUNCTION(BlueprintCallable)
 	void Heal(int Amount);
-	// add given amount to score
 	UFUNCTION(BlueprintCallable)
 	void AddScore(int Amount);
-	// item pickup logic
 	UFUNCTION(BlueprintCallable)
 	void OnItemPickUp(EItemType Item);
 };
