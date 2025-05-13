@@ -2,6 +2,7 @@
 
 #pragma once
 
+#include "TimerManager.h"
 #include "CoreMinimal.h"
 #include "GameFramework/Actor.h"
 #include "BulletParent.generated.h"
@@ -25,6 +26,8 @@ protected:
 public:	
 	// Called every frame
 	virtual void Tick(float DeltaTime) override;
+
+	FTimerHandle DestroyTimerHandle;
 
 	// movement speed
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Bullet")
@@ -51,4 +54,6 @@ public:
 	// called when bullet collision sphere detects overlap
 	UFUNCTION()
 	virtual void NotifyActorBeginOverlap(AActor* OtherActor) override;
+	UFUNCTION()
+	void SelfDestruct();
 };

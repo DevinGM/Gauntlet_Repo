@@ -17,14 +17,19 @@ ABulletParent::ABulletParent()
 	CollisionSphere->SetCollisionEnabled(ECollisionEnabled::QueryOnly);
 	CollisionSphere->SetCollisionResponseToAllChannels(ECR_Overlap);
 
-	SetLifeSpan(LifeSpan);
+	//SetLifeSpan(LifeSpan);
 }
-
+      
 // Called when the game starts or when spawned
 void ABulletParent::BeginPlay()
 {
 	Super::BeginPlay();
 	
+	// set self destruct timer
+	if (GetWorld())
+	{
+		GetWorld()->GetTimerManager().SetTimer(DestroyTimerHandle, this, &ABulletParent::SelfDestruct, 2.0f, false);
+	}
 }
 
 // Called every frame
@@ -56,5 +61,13 @@ void ABulletParent::NotifyActorBeginOverlap(AActor* OtherActor)
 	}
 
 	// Destroy bullet
-	Destroy();
+	if (!IsPendingKill())
+		Destroy();
+}
+
+// destroy function for timer
+void ABulletParent::SelfDestruct()
+{
+	if (!IsPendingKill())
+		Destroy();
 }
