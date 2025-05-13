@@ -30,6 +30,12 @@ public:
 	UPROPERTY(EditAnywhere)
 	APlayerParent* Player2;
 
+	UPROPERTY(EditAnywhere)
+	APlayerParent* Player3;
+
+	UPROPERTY(EditAnywhere)
+	APlayerParent* Player4;
+
 	// Called to bind functionality to input
 	void SetupInputs(class UInputComponent* InputComp);
 
@@ -48,4 +54,20 @@ public:
 	void MoveLeftRightP2(float Value);
 	UFUNCTION()
 	void AttackP2();
+
+	// player 3 actions
+	UFUNCTION()
+	void MoveUpDownP3(float Value);
+	UFUNCTION()
+	void MoveLeftRightP3(float Value);
+	UFUNCTION()
+	void AttackP3();
+
+	// player 4 actions
+	UFUNCTION()
+	void MoveUpDownP4(float Value);
+	UFUNCTION()
+	void MoveLeftRightP4(float Value);
+	UFUNCTION()
+	void AttackP4();
 };

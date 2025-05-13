@@ -39,6 +39,14 @@ void APlayerInputManager::SetupInputs(UInputComponent* InputComp)
 	InputComp->BindAxis("UpDown_P2", this, &APlayerInputManager::MoveUpDownP2);
 	InputComp->BindAxis("LeftRight_P2", this, &APlayerInputManager::MoveLeftRightP2);
 	InputComp->BindAction("Attack_P2", IE_Pressed, this, &APlayerInputManager::AttackP2);
+	// player 3 inputs
+	InputComp->BindAxis("UpDown_P3", this, &APlayerInputManager::MoveUpDownP3);
+	InputComp->BindAxis("LeftRight_P3", this, &APlayerInputManager::MoveLeftRightP3);
+	InputComp->BindAction("Attack_P3", IE_Pressed, this, &APlayerInputManager::AttackP3);
+	// player 4 inputs
+	InputComp->BindAxis("UpDown_P4", this, &APlayerInputManager::MoveUpDownP4);
+	InputComp->BindAxis("LeftRight_P4", this, &APlayerInputManager::MoveLeftRightP4);
+	InputComp->BindAction("Attack_P4", IE_Pressed, this, &APlayerInputManager::AttackP4);
 
 	UE_LOG(LogTemp, Warning, TEXT("Input Manager has bound inputs"));
 }
@@ -85,4 +93,48 @@ void APlayerInputManager::MoveLeftRightP2(float Value)
 void APlayerInputManager::AttackP2()
 {
 	if (Player2) Player2->Attack();
+}
+
+/// <summary>
+/// player 3 actions
+/// </summary>
+void APlayerInputManager::MoveUpDownP3(float Value)
+{
+	if (!Player3 || Value == 0.0f) return;
+
+	const float DeltaTime = GetWorld()->GetDeltaSeconds();
+	Player3->MoveInDirection(FVector(FVector::ForwardVector * Value), DeltaTime);
+}
+void APlayerInputManager::MoveLeftRightP3(float Value)
+{
+	if (!Player3 || Value == 0.0f) return;
+
+	const float DeltaTime = GetWorld()->GetDeltaSeconds();
+	Player3->MoveInDirection(FVector(FVector::RightVector * Value), DeltaTime);
+}
+void APlayerInputManager::AttackP3()
+{
+	if (Player3) Player3->Attack();
+}
+
+/// <summary>
+/// player 4 actions
+/// </summary>
+void APlayerInputManager::MoveUpDownP4(float Value)
+{
+	if (!Player4 || Value == 0.0f) return;
+
+	const float DeltaTime = GetWorld()->GetDeltaSeconds();
+	Player4->MoveInDirection(FVector(FVector::ForwardVector * Value), DeltaTime);
+}
+void APlayerInputManager::MoveLeftRightP4(float Value)
+{
+	if (!Player4 || Value == 0.0f) return;
+
+	const float DeltaTime = GetWorld()->GetDeltaSeconds();
+	Player4->MoveInDirection(FVector(FVector::RightVector * Value), DeltaTime);
+}
+void APlayerInputManager::AttackP4()
+{
+	if (Player4) Player4->Attack();
 }
