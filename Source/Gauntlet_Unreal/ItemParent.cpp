@@ -4,6 +4,7 @@
 #include "ItemTypes.h"
 #include "ItemParent.h"
 #include "Components/SphereComponent.h"
+#include "Components/StaticMeshComponent.h"
 #include "PlayerParent.h"
 
 // Sets default values
@@ -11,10 +12,9 @@ AItemParent::AItemParent()
 {
 	PrimaryActorTick.bCanEverTick = false;
 
-	// create collision sphere
 	CollisionSphere = CreateDefaultSubobject<USphereComponent>(TEXT("CollisionSphere"));
 	RootComponent = CollisionSphere;
-	CollisionSphere->SetSphereRadius(25.0f); // 25.0f is .5 in default sphere scale units
+	CollisionSphere->SetSphereRadius(25.0f);
 	CollisionSphere->SetCollisionEnabled(ECollisionEnabled::QueryOnly);
 	CollisionSphere->SetCollisionResponseToAllChannels(ECR_Overlap);
 }
@@ -26,13 +26,10 @@ void AItemParent::BeginPlay()
 	
 }
 
-// called when collision sphere detects overlap
 void AItemParent::NotifyActorBeginOverlap(AActor* OtherActor)
 {
-	// check if object collided with is a player
 	if (APlayerParent* Player = Cast<APlayerParent>(OtherActor))
 	{
-		// call Player's item pick up logic according to current item
 		Player->OnItemPickUp(ItemType);
 
 		// Destroy item
