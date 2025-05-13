@@ -65,7 +65,7 @@ public:
 	void MoveInDirection(FVector Direction, float DeltaTime);
 	// take given amount of damage
 	UFUNCTION(BlueprintCallable)
-	void Damage(int Amount);
+	void DealDamageToPlayer(int Amount);
 	// heal given amount of damage
 	UFUNCTION(BlueprintCallable)
 	void Heal(int Amount);

@@ -75,7 +75,7 @@ void  APlayerParent::MoveInDirection(FVector Direction, float DeltaTime)
 }
 
 // call to damage the player by given amount
-void APlayerParent::Damage(int Amount)
+void APlayerParent::DealDamageToPlayer(int Amount)
 {
 	currentHealth -= (Amount - armor);
 	if (currentHealth < 0)
