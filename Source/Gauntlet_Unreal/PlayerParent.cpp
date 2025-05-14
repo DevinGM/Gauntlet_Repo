@@ -13,6 +13,10 @@ APlayerParent::APlayerParent()
 void APlayerParent::BeginPlay()
 {
 	Super::BeginPlay();
+
+	// set health drain timer
+	if (GetWorld())
+		GetWorld()->GetTimerManager().SetTimer(HealthDrainTimer, this, &APlayerParent::HealthDrain, 2.0f, true);
 }
 
 /*// Called every frame
@@ -75,21 +79,32 @@ void  APlayerParent::MoveInDirection(FVector Direction, float DeltaTime)
 }
 
 // call to damage the player by given amount
-void APlayerParent::DealDamageToPlayer(int Amount, bool TimerDamage)
+void APlayerParent::DealDamageToPlayer(int Amount, bool IsTimerDamage)
 {
-	if (!TimerDamage)
-	{
+	if (IsTimerDamage)
 		currentHealth -= Amount;
-	}
-	else
+	else if (!OnDamageCooldown)
 	{
 		currentHealth -= (Amount - armor);
+		// start damage cooldown
+		if (GetWorld())
+		{
+			OnDamageCooldown = true;
+			GetWorld()->GetTimerManager().SetTimer(DamageCoolDownTimer, this, &APlayerParent::DamageCooldown, 2.0f, false);
+		}
 	}
 
 	if (currentHealth < 0)
 	{
 		////////////////      PUT DEATH CODE HERE
 		Destroy();
+
+		// set health drain timer
+		if (GetWorld())
+		{
+			GetWorld()->GetTimerManager().ClearTimer(HealthDrainTimer);
+			GetWorld()->GetTimerManager().ClearTimer(DamageCoolDownTimer);
+		}
 	}
 }
 
@@ -113,21 +128,27 @@ void APlayerParent::OnItemPickUp(EItemType Item)
 {
 	// if item is health pickup heal
 	if (Item == EItemType::HealthPickup)
-	{
 		////////////////	DETERMINE ITEM HEAL AMOUNT HERE
 		Heal(20);
-	}
 
 	// if item is score pickup add to score
 	if (Item == EItemType::ScorePickup)
-	{
 		////////////////	DETERMINE ITEM SCORE AMOUNT HERE
 		AddScore(20);
-	}
 
 	// if item is key pickup increment KeysHeld
 	if (Item == EItemType::KeyPickup)
-	{
 		KeysHeld++;
-	}
+}
+
+// deal 1 damage to the player bypassing armor
+void APlayerParent::HealthDrain()
+{
+	DealDamageToPlayer(1, true);
+}
+
+// turn off damage cooldown
+void APlayerParent::DamageCooldown()
+{
+	OnDamageCooldown = false;
 }

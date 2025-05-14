@@ -24,15 +24,17 @@ public:
 	// Called every frame
 	virtual void Tick(float DeltaTime) override;
 
+	// array of players in scene
+	UPROPERTY(EditAnywhere, Category = "Stats")
+	TArray<AActor*> PlayerArray;
+
+	// references to players
 	UPROPERTY(EditAnywhere)
 	APlayerParent* Player1;
-
 	UPROPERTY(EditAnywhere)
 	APlayerParent* Player2;
-
 	UPROPERTY(EditAnywhere)
 	APlayerParent* Player3;
-
 	UPROPERTY(EditAnywhere)
 	APlayerParent* Player4;
 

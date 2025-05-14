@@ -8,6 +8,7 @@
 
 #pragma once
 
+#include "TimerManager.h"
 #include "BulletParent.h"
 #include "ItemTypes.h"
 #include "CoreMinimal.h"
@@ -32,6 +33,11 @@ public:
 	// Called every frame
 	//virtual void Tick(float DeltaTime) override;
 
+	// timer handle for health drain
+	FTimerHandle HealthDrainTimer;
+	// timer handle for damage cooldown
+	FTimerHandle DamageCoolDownTimer;
+
 	// max health
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Stats")
 	int maxHealth = 100;
@@ -53,6 +59,9 @@ public:
 	// how many keys this player is holding
 	UPROPERTY(EditAnywhere)
 	int KeysHeld = 0;
+	// is the player currently on damage cooldown?
+	UPROPERTY(EditAnywhere)
+	bool OnDamageCooldown = false;
 	// reference to character's bullet
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Combat")
 	TSubclassOf<class ABulletParent> BulletClass;
@@ -75,4 +84,10 @@ public:
 	// item pickup logic
 	UFUNCTION(BlueprintCallable)
 	void OnItemPickUp(EItemType Item);
+	// health drain logic
+	UFUNCTION(BlueprintCallable)
+	void HealthDrain();
+	// damage cooldown logic
+	UFUNCTION(BlueprintCallable)
+	void DamageCooldown();
 };
