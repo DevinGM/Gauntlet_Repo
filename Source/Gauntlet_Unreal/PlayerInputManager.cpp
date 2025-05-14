@@ -1,6 +1,6 @@
 // Fill out your copyright notice in the Description page of Project Settings.
 
-
+#include "Blueprint/UserWidget.h"
 #include "Kismet/GameplayStatics.h"
 #include "PlayerInputManager.h"
 
@@ -21,17 +21,45 @@ void APlayerInputManager::BeginPlay()
 	// find all player characters
 	UGameplayStatics::GetAllActorsOfClass(GetWorld(), APlayerParent::StaticClass(), PlayerArray);
 	// store all players
+	// activate each player 
 	if (PlayerArray.IsValidIndex(0))
+	{
 		Player1 = Cast<APlayerParent>(PlayerArray[0]);
+
+	}
 	if (PlayerArray.IsValidIndex(1))
+	{
 		Player2 = Cast<APlayerParent>(PlayerArray[1]);
+
+	}
 	if (PlayerArray.IsValidIndex(2))
+	{
 		Player3 = Cast<APlayerParent>(PlayerArray[2]);
+
+	}
 	if (PlayerArray.IsValidIndex(3))
+	{
 		Player4 = Cast<APlayerParent>(PlayerArray[3]);
+
+	}
 	
 	EnableInput(GetWorld()->GetFirstPlayerController());
 	SetupInputs(InputComponent);
+
+	if (HUDClassRef)
+	{
+		UUserWidget* HUDWidget = CreateWidget<UUserWidget>(GetWorld(), HUDClassRef);
+
+		if (HUDWidget)
+		{
+			UHUD_Parent* HUD = Cast<UHUD_Parent>(HUDWidget);
+			if (HUD)
+			{
+				HUD->AddToViewport();
+				HUD->InputManagerReference = this;
+			}
+		}
+	}
 }
 
 // Called every frame

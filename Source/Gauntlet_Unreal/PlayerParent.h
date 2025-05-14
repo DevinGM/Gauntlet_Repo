@@ -45,10 +45,10 @@ public:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Stats")
 	int currentHealth = maxHealth;
 	// amount of damage player can block in a hit
-	UPROPERTY(EditAnywhere, Category = "Stats")
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Stats")
 	int armor = 0;
 	// current score
-	UPROPERTY(EditAnywhere, Category = "Stats")
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Stats")
 	int score = 0;
 	// amount of damage player deals
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Stats")
@@ -57,10 +57,10 @@ public:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Stats")
 	float moveSpeed = 500.0f;
 	// how many keys this player is holding
-	UPROPERTY(EditAnywhere)
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Stats")
 	int KeysHeld = 0;
 	// is the player currently on damage cooldown?
-	UPROPERTY(EditAnywhere)
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Combat")
 	bool OnDamageCooldown = false;
 	// reference to character's bullet
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Combat")

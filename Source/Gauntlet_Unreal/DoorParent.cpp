@@ -41,6 +41,7 @@ void ADoorParent::NotifyActorBeginOverlap(AActor* OtherActor)
 		// if the player is holding any keys, destroy door
 		if (Player->KeysHeld > 0)
 		{
+			Player->KeysHeld--;
 			Destroy();
 		}		
 	}
