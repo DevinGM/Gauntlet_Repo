@@ -23,16 +23,17 @@ public:
 	// Called every frame
 	virtual void Tick(float DeltaTime) override;
 
+	// array of players in scene
 	UPROPERTY(EditAnywhere, Category = "Stats")
 	TArray<AActor*> TrackedPlayers;
-
+	// reference to camera
 	UPROPERTY(EditAnywhere, Category = "Stats")
 	class UCameraComponent* Camera;
 
 	UPROPERTY(EditAnywhere, Category = "Stats")
 	float CameraHeight = 1200.f;
 	UPROPERTY(EditAnywhere, Category = "Stats")
-	float CameraXOffset = 10.0f;
+	float CameraXOffset = -10.0f;
 	UPROPERTY(EditAnywhere, Category = "Stats")
 	float FollowSpeed = 5.0f;
 

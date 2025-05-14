@@ -1,6 +1,7 @@
 // Fill out your copyright notice in the Description page of Project Settings.
 
 
+#include "Kismet/GameplayStatics.h"
 #include "PlayerInputManager.h"
 
 // Sets default values
@@ -16,6 +17,18 @@ APlayerInputManager::APlayerInputManager()
 void APlayerInputManager::BeginPlay()
 {
 	Super::BeginPlay();
+
+	// find all player characters
+	UGameplayStatics::GetAllActorsOfClass(GetWorld(), APlayerParent::StaticClass(), PlayerArray);
+	// store all players
+	if (PlayerArray.IsValidIndex(0))
+		Player1 = Cast<APlayerParent>(PlayerArray[0]);
+	if (PlayerArray.IsValidIndex(1))
+		Player2 = Cast<APlayerParent>(PlayerArray[1]);
+	if (PlayerArray.IsValidIndex(2))
+		Player3 = Cast<APlayerParent>(PlayerArray[2]);
+	if (PlayerArray.IsValidIndex(3))
+		Player4 = Cast<APlayerParent>(PlayerArray[3]);
 	
 	EnableInput(GetWorld()->GetFirstPlayerController());
 	SetupInputs(InputComponent);
@@ -25,7 +38,6 @@ void APlayerInputManager::BeginPlay()
 void APlayerInputManager::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
-
 }
 
 // Called to bind functionality to input
