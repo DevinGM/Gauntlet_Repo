@@ -16,8 +16,6 @@ ABulletParent::ABulletParent()
 	CollisionSphere->SetSphereRadius(25.0f); // 25.0f is .5 in default sphere scale units
 	CollisionSphere->SetCollisionEnabled(ECollisionEnabled::QueryOnly);
 	CollisionSphere->SetCollisionResponseToAllChannels(ECR_Overlap);
-
-	//SetLifeSpan(LifeSpan);
 }
       
 // Called when the game starts or when spawned
@@ -27,9 +25,7 @@ void ABulletParent::BeginPlay()
 	
 	// set self destruct timer
 	if (GetWorld())
-	{
 		GetWorld()->GetTimerManager().SetTimer(DestroyTimerHandle, this, &ABulletParent::SelfDestruct, 2.0f, false);
-	}
 }
 
 // Called every frame
