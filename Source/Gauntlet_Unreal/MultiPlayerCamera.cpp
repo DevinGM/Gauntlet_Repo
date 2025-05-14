@@ -1,5 +1,11 @@
 // Fill out your copyright notice in the Description page of Project Settings.
 
+/// <summary>
+/// Devin G Monaghan 
+/// 5/14/2025
+/// Handles camera logic
+/// </summary>
+
 #include "Camera/CameraComponent.h"
 #include "Kismet/GameplayStatics.h"
 #include "PlayerParent.h"
