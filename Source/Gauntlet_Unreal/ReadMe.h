@@ -28,6 +28,8 @@ public:
 	and the BP_Players, BP_PlayerBullets, BP_Items, BP_Door, BP_LevelEnd, and BP_HUD Blueprint classes
 	Devin also built the level and populated it with items
 
+	Robert worked all in blueprints. Made all enemy spawners, enemies, made enemy projecticles and original player controller prior to multiplayer functions.
+
 
 
 
