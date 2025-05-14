@@ -75,12 +75,21 @@ void  APlayerParent::MoveInDirection(FVector Direction, float DeltaTime)
 }
 
 // call to damage the player by given amount
-void APlayerParent::DealDamageToPlayer(int Amount)
+void APlayerParent::DealDamageToPlayer(int Amount, bool TimerDamage)
 {
-	currentHealth -= (Amount - armor);
+	if (!TimerDamage)
+	{
+		currentHealth -= Amount;
+	}
+	else
+	{
+		currentHealth -= (Amount - armor);
+	}
+
 	if (currentHealth < 0)
 	{
 		////////////////      PUT DEATH CODE HERE
+		Destroy();
 	}
 }
 
