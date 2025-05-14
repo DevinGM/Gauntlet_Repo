@@ -16,7 +16,7 @@ void APlayerParent::BeginPlay()
 
 	// set health drain timer
 	if (GetWorld())
-		GetWorld()->GetTimerManager().SetTimer(HealthDrainTimer, this, &APlayerParent::HealthDrain, 2.0f, true);
+		GetWorld()->GetTimerManager().SetTimer(HealthDrainTimer, this, &APlayerParent::HealthDrain, 10.0f, true);
 }
 
 /*// Called every frame

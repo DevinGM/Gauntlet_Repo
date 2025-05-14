@@ -34,9 +34,7 @@ void AMultiPlayerCamera::BeginPlay()
 	// Set this camera as the view target
 	APlayerController* PC = UGameplayStatics::GetPlayerController(GetWorld(), 0);
 	if (PC)
-	{
 		PC->SetViewTarget(this);
-	}
 }
 
 FVector AMultiPlayerCamera::CalculateCenterPosition() const
@@ -46,9 +44,7 @@ FVector AMultiPlayerCamera::CalculateCenterPosition() const
 
 	FVector Sum = FVector::ZeroVector;
 	for (AActor* Actor : TrackedPlayers)
-	{
 		if (Actor) Sum += Actor->GetActorLocation();
-	}
 
 	return Sum / TrackedPlayers.Num();
 }
@@ -69,10 +65,8 @@ void AMultiPlayerCamera::Tick(float DeltaTime)
 AMultiPlayerCamera* AMultiPlayerCamera::GetActiveCamera(UWorld* World)
 {
 	for (TActorIterator<AMultiPlayerCamera> It(World); It; ++It)
-	{
 		// Return the first (and supposedly only) one
 		return *It; 
-	}
 	return nullptr;
 }
 
@@ -101,10 +95,8 @@ FVector AMultiPlayerCamera::ClampWorldPositionToView(const FVector& WorldPositio
 	}
 
 	if (!bOutOfBounds)
-	{
 		// Already within view bounds — don't modify position
 		return WorldPosition;
-	}
 
 	// Clamp screen position
 	ScreenPos.X = FMath::Clamp(ScreenPos.X, Padding, ViewportSize.X - Padding);

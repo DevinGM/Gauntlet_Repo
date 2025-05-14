@@ -31,7 +31,7 @@ public:
 	class UCameraComponent* Camera;
 
 	UPROPERTY(EditAnywhere, Category = "Stats")
-	float CameraHeight = 1200.f;
+	float CameraHeight = 1800.f;
 	UPROPERTY(EditAnywhere, Category = "Stats")
 	float CameraXOffset = -10.0f;
 	UPROPERTY(EditAnywhere, Category = "Stats")
