@@ -5,7 +5,10 @@
 #include "CoreMinimal.h"
 #include "GameFramework/Actor.h"
 #include "PlayerParent.h"
+#include "HUD_Parent.h"
 #include "PlayerInputManager.generated.h"
+
+class UUserWidget;
 
 UCLASS()
 class GAUNTLET_UNREAL_API APlayerInputManager : public AActor
@@ -25,18 +28,22 @@ public:
 	virtual void Tick(float DeltaTime) override;
 
 	// array of players in scene
-	UPROPERTY(EditAnywhere, Category = "Stats")
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Players")
 	TArray<AActor*> PlayerArray;
 
 	// references to players
-	UPROPERTY(EditAnywhere)
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Players")
 	APlayerParent* Player1;
-	UPROPERTY(EditAnywhere)
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Players")
 	APlayerParent* Player2;
-	UPROPERTY(EditAnywhere)
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Players")
 	APlayerParent* Player3;
-	UPROPERTY(EditAnywhere)
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Players")
 	APlayerParent* Player4;
+	
+	// reference to hud
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "UI")
+	TSubclassOf<UUserWidget> HUDClassRef;
 
 	// Called to bind functionality to input
 	void SetupInputs(class UInputComponent* InputComp);
